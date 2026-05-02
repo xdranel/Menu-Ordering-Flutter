@@ -176,3 +176,12 @@ Use `10.0.2.2` for Android emulator (maps to host machine localhost). For a phys
 ## Related
 
 - [Menu-Ordering](https://github.com/xdranel/Menu-Ordering) — Spring Boot backend (cashier dashboard + REST API)
+
+## Authors
+
+- [Gendhi Ramona P](https://github.com/XDX1O1)
+- [Anak Agung Bramasta Jaya](https://github.com/BramastaJaya)
+- [Haidar Fulca Kurniawan](https://github.com/sijuki09)
+- [Arka Dwi Indrastata](https://github.com/Arkkop12)
+- [Fitria Nur Rofika](https://github.com/fitrianurrofika)
+- [Khansa Nailah Anjani](https://github.com/Ssa4a)
