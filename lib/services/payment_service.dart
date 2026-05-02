@@ -9,7 +9,7 @@ import 'package:menu_ordering_flutter/models/payment_model.dart';
 class PaymentService {
   final Dio _dio = ApiClient.instance;
 
-  Future<Payment> submitPayment({
+  Future<void> submitPayment({
     required String orderNumber,
     required PaymentMethod method,
     double? cashAmount,
@@ -17,34 +17,29 @@ class PaymentService {
     try {
       final body = {
         'orderNumber': orderNumber,
-        'paymentMethod': method.name.toUpperCase(),
+        'paymentMethod': method.toApiString,
         'cashAmount': ?cashAmount,
       };
 
-      final response = await _dio.post('/customer/api/payments', data: body);
-      final wrapped = ApiResponse.fromJson(
-        response.data as Map<String, dynamic>,
-        (data) => Payment.fromJson(data as Map<String, dynamic>),
-      );
-      return wrapped.data!;
+      await _dio.post('/customer/api/payments', data: body);
     } on DioException catch (e) {
       throw e.error is Exception ? e.error as Exception : e;
     }
   }
 
-  // Response data is "data:image/png;base64,<encoded>" — strip prefix and decode.
   Future<Uint8List> getQrCode(String orderNumber) async {
     try {
-      final response = await _dio
-          .get('/customer/api/payments/qr-code/$orderNumber');
+      final response =
+          await _dio.get('/customer/api/orders/$orderNumber/qr-code');
       final wrapped = ApiResponse.fromJson(
         response.data as Map<String, dynamic>,
-        (data) => data as String,
+        (data) => (data as Map<String, dynamic>)['qrCodeImage'] as String?,
       );
 
       final raw = wrapped.data ?? '';
       const prefix = 'data:image/png;base64,';
-      final encoded = raw.startsWith(prefix) ? raw.substring(prefix.length) : raw;
+      final encoded =
+          raw.startsWith(prefix) ? raw.substring(prefix.length) : raw;
       return base64Decode(encoded);
     } on DioException catch (e) {
       throw e.error is Exception ? e.error as Exception : e;

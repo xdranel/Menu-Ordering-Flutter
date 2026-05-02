@@ -9,20 +9,16 @@ class OrderService {
 
   Future<Order> createOrder({
     required String customerName,
-    required String tableNumber,
-    String? notes,
     required List<CartItem> items,
   }) async {
     try {
       final body = {
+        'orderType': 'CUSTOMER_SELF',
         'customerName': customerName,
-        'tableNumber': tableNumber,
-        if (notes != null && notes.isNotEmpty) 'notes': notes,
         'items': items
             .map((item) => {
-                  'menuItemId': item.menuItem.id,
+                  'menuId': item.menuItem.id,
                   'quantity': item.quantity,
-                  if (item.notes.isNotEmpty) 'notes': item.notes,
                 })
             .toList(),
       };
@@ -40,8 +36,7 @@ class OrderService {
 
   Future<Order> getOrder(String orderNumber) async {
     try {
-      final response =
-          await _dio.get('/customer/api/orders/$orderNumber');
+      final response = await _dio.get('/customer/api/orders/$orderNumber');
       final wrapped = ApiResponse.fromJson(
         response.data as Map<String, dynamic>,
         (data) => Order.fromJson(data as Map<String, dynamic>),

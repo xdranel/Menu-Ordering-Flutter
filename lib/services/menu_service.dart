@@ -25,7 +25,7 @@ class MenuService {
   Future<List<MenuItem>> getMenuItems({int? categoryId}) async {
     try {
       final response = await _dio.get(
-        '/customer/api/menu',
+        '/customer/api/menus',
         queryParameters: categoryId != null ? {'categoryId': categoryId} : null,
       );
       final wrapped = ApiResponse.fromJson(

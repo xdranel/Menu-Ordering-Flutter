@@ -4,7 +4,6 @@ class OrderItem {
   final int quantity;
   final double unitPrice;
   final double subtotal;
-  final String notes;
 
   const OrderItem({
     required this.menuItemId,
@@ -12,17 +11,16 @@ class OrderItem {
     required this.quantity,
     required this.unitPrice,
     required this.subtotal,
-    required this.notes,
   });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
+    final menu = json['menu'] as Map<String, dynamic>?;
     return OrderItem(
-      menuItemId: json['menuItemId'] as int,
-      menuItemName: json['menuItemName'] as String,
+      menuItemId: menu != null ? (menu['id'] as num).toInt() : 0,
+      menuItemName: menu != null ? menu['name'] as String : '',
       quantity: json['quantity'] as int,
-      unitPrice: (json['unitPrice'] as num).toDouble(),
+      unitPrice: (json['price'] as num).toDouble(),
       subtotal: (json['subtotal'] as num).toDouble(),
-      notes: json['notes'] as String? ?? '',
     );
   }
 }

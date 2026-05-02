@@ -1,15 +1,13 @@
 import 'package:menu_ordering_flutter/core/constants.dart';
 import 'package:menu_ordering_flutter/models/order_item_model.dart';
 
-enum OrderStatus { pending, processing, ready, completed, cancelled }
+enum OrderStatus { pending, confirmed, preparing, ready, completed, cancelled }
 
-enum PaymentStatus { unpaid, paid, refunded }
+enum PaymentStatus { pending, paid, failed, refunded }
 
 class Order {
   final String orderNumber;
   final String customerName;
-  final String tableNumber;
-  final String? notes;
   final OrderStatus status;
   final PaymentStatus paymentStatus;
   final double total; // pre-tax — always use totalWithTax for display
@@ -19,8 +17,6 @@ class Order {
   const Order({
     required this.orderNumber,
     required this.customerName,
-    required this.tableNumber,
-    this.notes,
     required this.status,
     required this.paymentStatus,
     required this.total,
@@ -33,16 +29,16 @@ class Order {
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
       orderNumber: json['orderNumber'] as String,
-      customerName: json['customerName'] as String,
-      tableNumber: json['tableNumber'] as String,
-      notes: json['notes'] as String?,
+      customerName: json['customerName'] as String? ?? '',
       status: _parseOrderStatus(json['status'] as String?),
       paymentStatus: _parsePaymentStatus(json['paymentStatus'] as String?),
       total: (json['total'] as num).toDouble(),
       items: (json['items'] as List<dynamic>? ?? [])
           .map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
           .toList(),
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
+          : DateTime.now(),
     );
   }
 
@@ -56,7 +52,7 @@ class Order {
   static PaymentStatus _parsePaymentStatus(String? value) {
     return PaymentStatus.values.firstWhere(
       (e) => e.name.toUpperCase() == value,
-      orElse: () => PaymentStatus.unpaid,
+      orElse: () => PaymentStatus.pending,
     );
   }
 }

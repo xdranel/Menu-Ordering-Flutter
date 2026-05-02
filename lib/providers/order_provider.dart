@@ -23,8 +23,6 @@ class OrderProvider extends ChangeNotifier {
 
   Future<void> placeOrder({
     required String customerName,
-    required String tableNumber,
-    String? notes,
     required List<CartItem> items,
   }) async {
     isLoading = true;
@@ -33,8 +31,6 @@ class OrderProvider extends ChangeNotifier {
     try {
       currentOrder = await _orderService.createOrder(
         customerName: customerName,
-        tableNumber: tableNumber,
-        notes: notes,
         items: items,
       );
     } catch (e) {
@@ -89,7 +85,6 @@ class OrderProvider extends ChangeNotifier {
       try {
         currentOrder = await _orderService.getOrder(orderNumber);
         notifyListeners();
-        // Stop once the order reaches a terminal state.
         if (currentOrder!.status == OrderStatus.completed ||
             currentOrder!.status == OrderStatus.cancelled) {
           stopPolling();
