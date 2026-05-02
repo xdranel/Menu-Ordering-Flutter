@@ -18,7 +18,7 @@ class OrderItem {
     return OrderItem(
       menuItemId: menu != null ? (menu['id'] as num).toInt() : 0,
       menuItemName: menu != null ? menu['name'] as String : '',
-      quantity: json['quantity'] as int,
+      quantity: (json['quantity'] as num).toInt(),
       unitPrice: (json['price'] as num).toDouble(),
       subtotal: (json['subtotal'] as num).toDouble(),
     );

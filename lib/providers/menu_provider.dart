@@ -21,7 +21,12 @@ class MenuProvider extends ChangeNotifier {
     error = null;
     notifyListeners();
     try {
-      categories = await _service.getCategories();
+      final allCategories = await _service.getCategories();
+      // "SEMUA" is a backend display-only category with no items; the app's
+      // own "All" chip (null id) already covers it.
+      categories = allCategories
+          .where((c) => c.name.toUpperCase() != 'SEMUA')
+          .toList();
       menuItems = await _service.getMenuItems();
     } catch (e) {
       error = e.toString();
@@ -52,6 +57,9 @@ class MenuProvider extends ChangeNotifier {
     }
   }
 
-  // Retry after error.
-  Future<void> retry() => loadAll();
+  // Retry after error — also resets any active category filter.
+  Future<void> retry() {
+    selectedCategoryId = null;
+    return loadAll();
+  }
 }

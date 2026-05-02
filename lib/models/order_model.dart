@@ -36,10 +36,26 @@ class Order {
       items: (json['items'] as List<dynamic>? ?? [])
           .map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
           .toList(),
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'] as String)
-          : DateTime.now(),
+      createdAt: _parseDateTime(json['createdAt']),
     );
+  }
+
+  // Spring Boot serializes LocalDateTime as [year,month,day,h,m,s,nano] array
+  // when write-dates-as-timestamps is enabled (the default). Handle both forms.
+  static DateTime _parseDateTime(dynamic value) {
+    if (value == null) return DateTime.now();
+    if (value is String) return DateTime.parse(value);
+    if (value is List && value.isNotEmpty) {
+      return DateTime(
+        (value[0] as num).toInt(),
+        value.length > 1 ? (value[1] as num).toInt() : 1,
+        value.length > 2 ? (value[2] as num).toInt() : 1,
+        value.length > 3 ? (value[3] as num).toInt() : 0,
+        value.length > 4 ? (value[4] as num).toInt() : 0,
+        value.length > 5 ? (value[5] as num).toInt() : 0,
+      );
+    }
+    return DateTime.now();
   }
 
   static OrderStatus _parseOrderStatus(String? value) {
