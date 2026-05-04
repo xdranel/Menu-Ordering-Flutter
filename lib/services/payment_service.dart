@@ -18,7 +18,7 @@ class PaymentService {
       final body = {
         'orderNumber': orderNumber,
         'paymentMethod': method.toApiString,
-        'cashAmount': ?cashAmount,
+        if (cashAmount != null) 'cashAmount': cashAmount,
       };
 
       await _dio.post('/customer/api/payments', data: body);
@@ -29,8 +29,9 @@ class PaymentService {
 
   Future<Uint8List> getQrCode(String orderNumber) async {
     try {
-      final response =
-          await _dio.get('/customer/api/orders/$orderNumber/qr-code');
+      final response = await _dio.get(
+        '/customer/api/orders/$orderNumber/qr-code',
+      );
       final wrapped = ApiResponse.fromJson(
         response.data as Map<String, dynamic>,
         (data) => (data as Map<String, dynamic>)['qrCodeImage'] as String?,
@@ -38,8 +39,9 @@ class PaymentService {
 
       final raw = wrapped.data ?? '';
       const prefix = 'data:image/png;base64,';
-      final encoded =
-          raw.startsWith(prefix) ? raw.substring(prefix.length) : raw;
+      final encoded = raw.startsWith(prefix)
+          ? raw.substring(prefix.length)
+          : raw;
       return base64Decode(encoded);
     } on DioException catch (e) {
       throw e.error is Exception ? e.error as Exception : e;
