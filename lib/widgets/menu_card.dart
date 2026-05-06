@@ -7,7 +7,6 @@ import 'package:menu_ordering_flutter/widgets/price_display.dart';
 import 'package:provider/provider.dart';
 
 const Color _menuPrimary = Color(0xFF9E3636);
-const Color _menuAccent = Color(0xFF963333);
 
 class MenuCard extends StatelessWidget {
   const MenuCard({super.key, required this.item});
@@ -20,119 +19,111 @@ class MenuCard extends StatelessWidget {
 
     return Card(
       clipBehavior: Clip.antiAlias,
+      color: Colors.white,
+      surfaceTintColor: Colors.transparent,
       elevation: 1.5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-      child: InkWell(
-        onTap: item.available ? () => _addToCart(context) : null,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          _menuPrimary.withValues(alpha: 0.10),
-                          _menuAccent.withValues(alpha: 0.22),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: _MenuImage(imageUrl: item.imageUrl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withValues(alpha: 0.20),
                   ),
-                  if (item.isPromo)
-                    const Positioned(
-                      left: 10,
-                      top: 10,
-                      child: _StatusPill(
-                        label: 'Promo',
-                        backgroundColor: _menuPrimary,
-                        foregroundColor: Colors.white,
-                      ),
-                    ),
-                  Positioned(
-                    right: 10,
+                  child: _MenuImage(imageUrl: item.imageUrl),
+                ),
+                if (item.isPromo)
+                  const Positioned(
+                    left: 10,
                     top: 10,
                     child: _StatusPill(
-                      label: item.available ? 'Ready' : 'Sold Out',
-                      backgroundColor: item.available
-                          ? const Color(0xFFE7F6ED)
-                          : const Color(0xFFF9E0E0),
-                      foregroundColor: item.available
-                          ? const Color(0xFF266845)
-                          : _menuPrimary,
+                      label: 'Promo',
+                      backgroundColor: _menuPrimary,
+                      foregroundColor: Colors.white,
                     ),
                   ),
-                ],
-              ),
+                Positioned(
+                  right: 10,
+                  top: 10,
+                  child: _StatusPill(
+                    label: item.available ? 'Ready' : 'Sold Out',
+                    backgroundColor: item.available
+                        ? const Color(0xFFE7F6ED)
+                        : const Color(0xFFF9E0E0),
+                    foregroundColor: item.available
+                        ? const Color.fromARGB(255, 26, 94, 58)
+                        : _menuPrimary,
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      color: _menuAccent,
-                      fontWeight: FontWeight.w700,
-                    ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    item.description?.trim().isNotEmpty == true
-                        ? item.description!
-                        : item.categoryName,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.black54,
-                      height: 1.35,
-                    ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  item.description?.trim().isNotEmpty == true
+                      ? item.description!
+                      : item.categoryName,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.black,
+                    height: 1.35,
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: PriceDisplay(
-                          price: item.getCurrentPrice(),
-                          originalPrice: item.isPromo ? item.price : null,
-                          highlight: true,
-                        ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: PriceDisplay(
+                        price: item.getCurrentPrice(),
+                        originalPrice: item.isPromo ? item.price : null,
+                        highlight: true,
                       ),
-                      const SizedBox(width: 8),
-                      SizedBox(
-                        height: 36,
-                        child: ElevatedButton(
-                          onPressed: item.available
-                              ? () => _addToCart(context)
-                              : null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _menuPrimary,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            minimumSize: const Size(0, 36),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                        onPressed: item.available
+                            ? () => _addToCart(context)
+                            : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _menuPrimary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          minimumSize: const Size(0, 36),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(Icons.add_rounded, size: 18),
                         ),
+                        child: const Icon(Icons.add_rounded, size: 18),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

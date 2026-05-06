@@ -39,7 +39,7 @@ class _MenuScreenState extends State<MenuScreen> {
           children: [
             const Text('ChopChop'),
             Text(
-              'Pick your menu and build the order',
+              'Restoran terbaik di kota ini',
               style: Theme.of(
                 context,
               ).textTheme.bodySmall?.copyWith(color: Colors.white70),
@@ -64,8 +64,15 @@ class _MenuScreenState extends State<MenuScreen> {
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(24),
+                    bottom: Radius.circular(7),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 3,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Column(
                   children: [
@@ -75,7 +82,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         children: [
                           Expanded(
                             child: Text(
-                              'Explore the current available menu.',
+                              'Jelajahi dan temukan kategori makanan kamu.',
                               style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(color: Colors.black54),
                             ),
@@ -83,8 +90,10 @@ class _MenuScreenState extends State<MenuScreen> {
                           if (menu.isLoading)
                             const SizedBox(
                               width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                              height: 10,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                              ),
                             ),
                         ],
                       ),
@@ -95,7 +104,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         selectedId: menu.selectedCategoryId,
                         onSelect: menu.selectCategory,
                       ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 7),
                   ],
                 ),
               ),
@@ -141,7 +150,7 @@ class _MenuScreenState extends State<MenuScreen> {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 color: _menuScreenAccent,
-                borderRadius: BorderRadius.circular(22),
+                borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
                     color: _menuScreenAccent.withValues(alpha: 0.18),
@@ -160,7 +169,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${cart.totalQuantity} item${cart.totalQuantity == 1 ? '' : 's'} in cart',
+                            '${cart.totalQuantity} pesanan di keranjang',
                             style: Theme.of(context).textTheme.labelLarge
                                 ?.copyWith(color: Colors.white70),
                           ),
@@ -185,7 +194,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         minimumSize: const Size(0, 48),
                         padding: const EdgeInsets.symmetric(horizontal: 18),
                       ),
-                      child: const Text('View Cart'),
+                      child: const Text('Checkout'),
                     ),
                   ],
                 ),
@@ -211,7 +220,7 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Could not load the menu',
+              'Tidak dapat memuat menu ChopChop',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: _menuScreenAccent,
                 fontWeight: FontWeight.w700,
@@ -232,7 +241,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 backgroundColor: _menuScreenPrimary,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Try Again'),
+              child: const Text('Coba Lagi'),
             ),
           ],
         ),
@@ -257,7 +266,7 @@ class _EmptyMenuState extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           Text(
-            'No menu is available in this category yet.',
+            'Tidak ada menu yang tersedia dalam kategori ini.',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: _menuScreenAccent,
               fontWeight: FontWeight.w700,
