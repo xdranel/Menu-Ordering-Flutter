@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 
 const Color _cartScreenPrimary = Color(0xFF9E3636);
 const Color _cartScreenAccent = Color(0xFF963333);
-const Color _cartScreenBackground = Color(0xFFF8F3F3);
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -73,7 +72,7 @@ class _CartScreenState extends State<CartScreen> {
     return Consumer2<CartProvider, OrderProvider>(
       builder: (context, cart, order, _) {
         return Scaffold(
-          backgroundColor: _cartScreenBackground,
+          backgroundColor: const Color.fromARGB(255, 240, 240, 240),
           appBar: AppBar(
             backgroundColor: _cartScreenPrimary,
             foregroundColor: Colors.white,
@@ -98,12 +97,17 @@ class _CartScreenState extends State<CartScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Customer Details',
+                                    'Nama Pemesan',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .titleMedium
+                                        .titleLarge
                                         ?.copyWith(
-                                          color: _cartScreenAccent,
+                                          color: const Color.fromARGB(
+                                            255,
+                                            0,
+                                            0,
+                                            0,
+                                          ),
                                           fontWeight: FontWeight.w700,
                                         ),
                                   ),
@@ -113,31 +117,12 @@ class _CartScreenState extends State<CartScreen> {
                                     textCapitalization:
                                         TextCapitalization.words,
                                     decoration: const InputDecoration(
-                                      labelText: 'Customer name',
-                                      hintText: 'Enter your name',
+                                      labelText: 'Masukkan nama Anda',
                                     ),
                                   ),
-                                  const SizedBox(height: 12),
-                                  TextField(
-                                    controller: _tableNumberController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Table number',
-                                      hintText: 'Optional',
-                                    ),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  TextField(
-                                    controller: _orderNotesController,
-                                    minLines: 2,
-                                    maxLines: 3,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Order notes',
-                                      hintText: 'Optional',
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
+                                  const SizedBox(height: 5),
                                   Text(
-                                    'The current mobile order API only submits customer name and items. Table number and order-level notes stay local for now.',
+                                    'We will ensure the customer name is keep confidential and only used for order identification purposes.',
                                     style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(color: Colors.black54),
                                   ),
@@ -146,7 +131,7 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'Order Items',
+                              'Ringkasan Pesanan',
                               style: Theme.of(context).textTheme.titleMedium
                                   ?.copyWith(
                                     color: _cartScreenAccent,
@@ -156,7 +141,7 @@ class _CartScreenState extends State<CartScreen> {
                             const SizedBox(height: 12),
                             for (final item in cart.items) ...[
                               CartItemTile(item: item),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: 14),
                             ],
                           ],
                         ),
@@ -173,19 +158,19 @@ class _CartScreenState extends State<CartScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             _SummaryRow(
-                              label: 'Subtotal',
+                              label: 'Subtotal:',
                               value: formatIDR(cart.subtotal),
                             ),
                             const SizedBox(height: 8),
                             _SummaryRow(
-                              label: 'Tax (10%)',
+                              label: 'Pajak (10%):',
                               value: formatIDR(
                                 cart.totalWithTax - cart.subtotal,
                               ),
                             ),
                             const SizedBox(height: 8),
                             _SummaryRow(
-                              label: 'Total',
+                              label: 'Total Pembayaran:',
                               value: formatIDR(cart.totalWithTax),
                               emphasize: true,
                             ),
@@ -193,7 +178,12 @@ class _CartScreenState extends State<CartScreen> {
                             ElevatedButton(
                               onPressed: order.isLoading ? null : _placeOrder,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: _cartScreenPrimary,
+                                backgroundColor: const Color.fromRGBO(
+                                  69,
+                                  160,
+                                  73,
+                                  1,
+                                ),
                                 foregroundColor: Colors.white,
                               ),
                               child: order.isLoading
@@ -205,7 +195,7 @@ class _CartScreenState extends State<CartScreen> {
                                         color: Colors.white,
                                       ),
                                     )
-                                  : const Text('Place Order'),
+                                  : const Text('Bayar Sekarang'),
                             ),
                           ],
                         ),

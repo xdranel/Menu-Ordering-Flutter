@@ -6,45 +6,16 @@ import 'package:menu_ordering_flutter/widgets/quantity_selector.dart';
 import 'package:provider/provider.dart';
 
 const Color _cartTilePrimary = Color(0xFF9E3636);
-const Color _cartTileAccent = Color(0xFF963333);
 
-class CartItemTile extends StatefulWidget {
+class CartItemTile extends StatelessWidget {
   const CartItemTile({super.key, required this.item});
 
   final CartItem item;
 
   @override
-  State<CartItemTile> createState() => _CartItemTileState();
-}
-
-class _CartItemTileState extends State<CartItemTile> {
-  late final TextEditingController _notesController;
-
-  @override
-  void initState() {
-    super.initState();
-    _notesController = TextEditingController(text: widget.item.notes);
-  }
-
-  @override
-  void didUpdateWidget(covariant CartItemTile oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.item.notes != widget.item.notes &&
-        _notesController.text != widget.item.notes) {
-      _notesController.text = widget.item.notes;
-    }
-  }
-
-  @override
-  void dispose() {
-    _notesController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final cart = context.read<CartProvider>();
-    final menuItem = widget.item.menuItem;
+    final menuItem = item.menuItem;
 
     return Dismissible(
       key: ValueKey(menuItem.id),
@@ -60,7 +31,10 @@ class _CartItemTileState extends State<CartItemTile> {
       ),
       onDismissed: (_) => cart.removeItem(menuItem.id),
       child: Card(
-        elevation: 0.8,
+        color: Colors.white,
+        shadowColor: Colors.black.withValues(alpha: 0.18),
+        surfaceTintColor: Colors.transparent,
+        elevation: 3,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         child: Padding(
           padding: const EdgeInsets.all(14),
@@ -74,12 +48,19 @@ class _CartItemTileState extends State<CartItemTile> {
                     width: 52,
                     height: 52,
                     decoration: BoxDecoration(
-                      color: _cartTilePrimary.withValues(alpha: 0.10),
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.10),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: const Icon(
                       Icons.fastfood_rounded,
-                      color: _cartTilePrimary,
+                      color: Color.fromARGB(255, 56, 56, 56),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -91,7 +72,7 @@ class _CartItemTileState extends State<CartItemTile> {
                           menuItem.name,
                           style: Theme.of(context).textTheme.titleSmall
                               ?.copyWith(
-                                color: _cartTileAccent,
+                                color: const Color.fromARGB(255, 0, 0, 0),
                                 fontWeight: FontWeight.w700,
                               ),
                         ),
@@ -107,42 +88,27 @@ class _CartItemTileState extends State<CartItemTile> {
                   IconButton(
                     onPressed: () => cart.removeItem(menuItem.id),
                     icon: const Icon(Icons.close_rounded),
-                    color: _cartTilePrimary,
+                    color: const Color.fromRGBO(150, 51, 51, 1),
                     tooltip: 'Remove',
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _notesController,
-                onChanged: (value) => cart.updateNotes(menuItem.id, value),
-                decoration: const InputDecoration(
-                  labelText: 'Item note',
-                  hintText: 'No chili, extra ice, etc.',
-                ),
-                minLines: 1,
-                maxLines: 2,
-              ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 5),
               Row(
                 children: [
                   Expanded(
                     child: PriceDisplay(
-                      price: widget.item.subtotal,
+                      price: item.subtotal,
                       alignment: CrossAxisAlignment.start,
                       highlight: true,
                     ),
                   ),
                   QuantitySelector(
-                    quantity: widget.item.quantity,
-                    onDecrease: () => cart.updateQuantity(
-                      menuItem.id,
-                      widget.item.quantity - 1,
-                    ),
-                    onIncrease: () => cart.updateQuantity(
-                      menuItem.id,
-                      widget.item.quantity + 1,
-                    ),
+                    quantity: item.quantity,
+                    onDecrease: () =>
+                        cart.updateQuantity(menuItem.id, item.quantity - 1),
+                    onIncrease: () =>
+                        cart.updateQuantity(menuItem.id, item.quantity + 1),
                   ),
                 ],
               ),

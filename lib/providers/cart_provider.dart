@@ -10,23 +10,21 @@ class CartProvider extends ChangeNotifier {
 
   bool get isEmpty => _items.isEmpty;
 
-  int get totalQuantity =>
-      _items.fold(0, (sum, item) => sum + item.quantity);
+  int get totalQuantity => _items.fold(0, (sum, item) => sum + item.quantity);
 
-  double get subtotal =>
-      _items.fold(0.0, (sum, item) => sum + item.subtotal);
+  double get subtotal => _items.fold(0.0, (sum, item) => sum + item.subtotal);
 
   double get totalWithTax => subtotal * (1 + kTaxRate);
 
   // Cash payment amount rounded up to nearest IDR 1,000.
   int get roundedCashTotal => roundCashAmount(subtotal);
 
-  void addItem(MenuItem menuItem, {int quantity = 1, String notes = ''}) {
+  void addItem(MenuItem menuItem, {int quantity = 1}) {
     final index = _items.indexWhere((i) => i.menuItem.id == menuItem.id);
     if (index >= 0) {
       _items[index].quantity += quantity;
     } else {
-      _items.add(CartItem(menuItem: menuItem, quantity: quantity, notes: notes));
+      _items.add(CartItem(menuItem: menuItem, quantity: quantity));
     }
     notifyListeners();
   }
@@ -44,14 +42,6 @@ class CartProvider extends ChangeNotifier {
     final index = _items.indexWhere((i) => i.menuItem.id == menuItemId);
     if (index >= 0) {
       _items[index].quantity = quantity;
-      notifyListeners();
-    }
-  }
-
-  void updateNotes(int menuItemId, String notes) {
-    final index = _items.indexWhere((i) => i.menuItem.id == menuItemId);
-    if (index >= 0) {
-      _items[index].notes = notes;
       notifyListeners();
     }
   }
